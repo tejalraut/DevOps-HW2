@@ -119,25 +119,14 @@ function generateTestCases()
 		var phoneno	= _.contains(functionConstraints[funcName].params, "phoneNumber");
 		if(phoneno)
 		{
-			content += generatePhoneTestCases("1111111111", "(NNN) NNN-NNNN", "", funcName, "" );
-			content += generatePhoneTestCases("2222222222", "(NNN) NNN-NNNN", '{"normalize": true}', funcName, "" );
-			content += generatePhoneTestCases(faker.phone.phoneNumber(), faker.phone.phoneFormats(), "", funcName, "");
+			content += generatePhoneTC("1111111111", "(NNN) NNN-NNNN", "", funcName, "" );
+			content += generatePhoneTC("2222222222", "(NNN) NNN-NNNN", '{"normalize": true}', funcName, "" );
+			content += generatePhoneTC(faker.phone.phoneNumber(), faker.phone.phoneFormats(), "", funcName, "");
 		}
 
 	}
 	content += "subject.{0}({1});\n".format('blackListNumber', "'2121111111'");
 	fs.writeFileSync('test.js', content, "utf8");
-
-}
-
-function generatePhoneTestCases(phoneNumber,phoneNumberFormat, options, funcName, args)
-{
-	if(options == '')
-			args+="'"+phoneNumber+"','"+phoneNumberFormat+"','"+options+"'";
-		else
-			args+="'"+phoneNumber+"','"+phoneNumberFormat+"',"+options;
-	var testCase = "subject.{0}({1});\n".format(funcName, args );
-	return testCase;
 
 }
 
@@ -172,6 +161,16 @@ function generateMockFsTestCases (pathExists,fileWithContent,fileWithNoContent,f
 
 	testCase += "\tsubject.{0}({1});\n".format(funcName, args );
 	testCase+="mock.restore();\n";
+	return testCase;
+}
+
+function generatePhoneTC(phoneNumber,phoneNumberFormat, options, funcName, args)
+{
+	if(options == '')
+			args+="'"+phoneNumber+"','"+phoneNumberFormat+"','"+options+"'";
+		else
+			args+="'"+phoneNumber+"','"+phoneNumberFormat+"',"+options;
+	var testCase = "subject.{0}({1});\n".format(funcName, args );
 	return testCase;
 }
 
