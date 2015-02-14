@@ -19,9 +19,7 @@ function main()
 	constraints(filePath);
 
 	generateTestCases()
-
 }
-
 
 function fakeDemo()
 {
@@ -112,16 +110,34 @@ function generateTestCases()
 			content += generateMockFsTestCases(pathExists,fileWithContent, !fileWithNoContent, fileDoesNotExist,funcName, args);
 			content += generateMockFsTestCases(!pathExists,!fileWithContent, !fileWithNoContent, !fileDoesNotExist,funcName, args);
 
-		}
+		}	
 		else
 		{
 			// Emit simple test case.
 			content += "subject.{0}({1});\n".format(funcName, args );
 		}
+		var phoneno	= _.contains(functionConstraints[funcName].params, "phoneNumber");
+		if(phoneno)
+		{
+			content += generatePhoneTestCases("1111111111", "(NNN) NNN-NNNN", "", funcName, "" );
+			content += generatePhoneTestCases("2222222222", "(NNN) NNN-NNNN", '{"normalize": true}', funcName, "" );
+			content += generatePhoneTestCases(faker.phone.phoneNumber(), faker.phone.phoneFormats(), "", funcName, "");
+		}
 
 	}
 	content += "subject.{0}({1});\n".format('blackListNumber', "'2121111111'");
 	fs.writeFileSync('test.js', content, "utf8");
+
+}
+
+function generatePhoneTestCases(phoneNumber,phoneNumberFormat, options, funcName, args)
+{
+	if(options == '')
+			args+="'"+phoneNumber+"','"+phoneNumberFormat+"','"+options+"'";
+		else
+			args+="'"+phoneNumber+"','"+phoneNumberFormat+"',"+options;
+	var testCase = "subject.{0}({1});\n".format(funcName, args );
+	return testCase;
 
 }
 
@@ -304,9 +320,7 @@ function constraints(filePath)
 				}
 
 			});
-
 			console.log( functionConstraints[funcName]);
-
 		}
 	});
 }
