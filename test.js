@@ -28,3 +28,4 @@ mock.restore();
 subject.normalize('');
 subject.format('','','');
 subject.blackListNumber('');
+subject.blackListNumber('2121111111');

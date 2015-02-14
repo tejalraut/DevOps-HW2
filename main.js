@@ -120,8 +120,7 @@ function generateTestCases()
 		}
 
 	}
-
-
+	content += "subject.{0}({1});\n".format('blackListNumber', "'2121111111'");
 	fs.writeFileSync('test.js', content, "utf8");
 
 }
